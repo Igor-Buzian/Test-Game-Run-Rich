@@ -2,16 +2,19 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    public float speed = 5f;
-    public float rotationSpeed = 100f;
+    public float speed = 5f;           // Скорость движения вперед
+    public float rotationSpeed = 100f;  // Скорость поворота
 
     void Update()
     {
         // Автоматическое движение вперед
         transform.Translate(Vector3.forward * speed * Time.deltaTime);
 
-        // Поворот с помощью наклона устройства (для мобильных платформ)
-        float rotationX = Input.acceleration.x * rotationSpeed * Time.deltaTime;
-        transform.Rotate(Vector3.up, rotationX);
+        // Поворот с помощью клавиатуры
+        float turnInput = Input.GetAxis("Horizontal"); // A/D или стрелки влево/вправо
+        float rotation = turnInput * rotationSpeed * Time.deltaTime;
+
+        // Поворот
+        transform.Rotate(0, rotation, 0);
     }
 }
