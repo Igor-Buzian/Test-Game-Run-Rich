@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
@@ -8,25 +9,30 @@ public class ItemCollector : MonoBehaviour
     [SerializeField] int moneyCollected = 40;
     [SerializeField] int currentMoneyCountMinus = 0;
     [SerializeField] int currentMoneyCountPlus = 0;
-
     [SerializeField] private TextMeshProUGUI MoneyCollectedText;
     [SerializeField] private GameObject MoneyCanvas;
     private WaitForSeconds TwoSecond;
-
+    PlayerMovement PlayerMovement;
     [Header("progressBar")]
     public Image progressBar;
     public Animator characterAnimator;
     public string animationTrigger;
     public float fillAmountThreshold = 0f; // Начальное значение 0f
-
+    Collider characterCollider;
     [Header("ChangeGameobjects")]
     [SerializeField] GameObject[] Player;
     int CustomCount;
     [SerializeField] float[] threshold;
     private bool canvasActive = false;
-
+    public bool exit = true;
+    private Quaternion initialRotation;
+    private float rotationDuration = 1f; // Длительность вращения в секундах
     private void Start()
     {
+        initialRotation =transform.rotation;
+        characterCollider = GetComponent<Collider>();
+        PlayerMovement = FindAnyObjectByType<PlayerMovement>();
+        fillAmountThreshold = threshold[0];
         TwoSecond = new WaitForSeconds(2);
         if (MoneyCollectedText == null)
         {
@@ -124,16 +130,21 @@ public class ItemCollector : MonoBehaviour
     // Функция для проверки и запуска анимации
     void CheckAndPlayAnimation()
     {
-        if (progressBar.fillAmount >= fillAmountThreshold)
+        if (exit)
         {
-            if (characterAnimator != null)
+            if (moneyCollected >= threshold[CustomCount])
             {
-                characterAnimator.SetTrigger(animationTrigger);
+                if (characterAnimator != null)
+                {
+                    exit = false;
+                    characterAnimator.SetTrigger("custom");
+                }
+                progressBar.fillAmount = 0f; // Сброс шкалы
+                UpdateFillAmountThreshold(); // Обновляем порог после анимации
             }
-            progressBar.fillAmount = 0f; // Сброс шкалы
-            UpdateFillAmountThreshold(); // Обновляем порог после анимации
         }
-        progressBar.fillAmount = (float)moneyCollected / 100f; // Обновляем шкалу прогресса
+        
+        progressBar.fillAmount = (float)moneyCollected / 1000f; // Обновляем шкалу прогресса
     }
 
     // Функция для обновления fillAmountThreshold
@@ -142,14 +153,52 @@ public class ItemCollector : MonoBehaviour
         // Здесь реализуйте логику изменения порога в зависимости от moneyCollected
         // Пример:  Порог увеличивается с каждыми 20 собранными деньгами
         fillAmountThreshold = (float)moneyCollected / 1000f; // Пример: Порог равен проценту от 100
-        //fillAmountThreshold = Mathf.Clamp01((float)moneyCollected / 20f); // Пример: Порог увеличивается с каждыми 20 деньгами, но не превышает 1
+                                                            //fillAmountThreshold = Mathf.Clamp01((float)moneyCollected / 20f); // Пример: Порог увеличивается с каждыми 20 деньгами, но не превышает 1
     }
-    public void ChangeCustom()
+    public void StartMethod()
     {
+        PlayerMovement.enabled = false;
+        StartCoroutine(RotateCharacterCoroutine());
+        StartCoroutine(ChangeCustomCoroutine());
+    }
+
+    private IEnumerator RotateCharacterCoroutine()
+    {
+        float elapsedTime = 0f;
+        Quaternion targetRotation = Quaternion.Euler(0f, 360f, 0f) * initialRotation;
+
+        Debug.Log("Начинаем вращение персонажа");
+
+        while (elapsedTime < rotationDuration)
+        {
+            float t = elapsedTime / rotationDuration;
+            transform.rotation = Quaternion.Lerp(initialRotation, targetRotation, t);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        transform.rotation = targetRotation;
+        Debug.Log("Вращение завершено");
+    }
+    private IEnumerator ChangeCustomCoroutine() 
+    {
+        yield return TwoSecond;
+        PlayerMovement.enabled = true;
+        //characterCollider.enabled = true;
         CustomCount++;
+        fillAmountThreshold = threshold[CustomCount];
         Player[CustomCount - 1].SetActive(false);
         Player[CustomCount].SetActive(true);
-    } 
+        exit = true;
+        characterAnimator.SetTrigger("Exit");
+    }
+
+
+    public void ChangeCustom()
+    {
+      
+
+    }
 
     public int GetCollectedAmount(string itemType)
     {
