@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class ItemCollector : MonoBehaviour
 {
-    [SerializeField] int moneyCollected = 40;
+    public int moneyCollected = 40;
     [SerializeField] int currentMoneyCountMinus = 0;
     [SerializeField] int currentMoneyCountPlus = 0;
     [SerializeField] private TextMeshProUGUI MoneyCollectedText;
@@ -27,6 +27,7 @@ public class ItemCollector : MonoBehaviour
     public bool exit = true;
     private Quaternion initialRotation;
     private float rotationDuration = 1f; // Длительность вращения в секундах
+
     private void Start()
     {
         initialRotation =transform.rotation;
@@ -48,10 +49,12 @@ public class ItemCollector : MonoBehaviour
         if (other.CompareTag("Money"))
         {
             CollectItem("Money", 2);
+            other.gameObject.SetActive(false);
         }
         else if (other.CompareTag("Alcohol"))
         {
             CollectItem("Alcohol", 20);
+            other.gameObject.SetActive(false);
         }
         else if (other.CompareTag("Frame"))
         {
@@ -68,7 +71,11 @@ public class ItemCollector : MonoBehaviour
             {
                 CollectItem("MoneyFrame", other.gameObject.GetComponent<FrameLogic>().MoneyCount);
             }
-
+           
+        }
+        else if (other.CompareTag("Dead"))
+        {
+            FindAnyObjectByType<LoseLogic>().OpenUI();
         }
         else
         {
@@ -77,8 +84,6 @@ public class ItemCollector : MonoBehaviour
 
         // Проверка и запуск анимации после каждого сбора
         CheckAndPlayAnimation();
-
-        other.gameObject.SetActive(false);
     }
 
 
@@ -100,6 +105,10 @@ public class ItemCollector : MonoBehaviour
             moneyCollected -= count;
             MoneyCollectedText.color = Color.red;
             MoneyCollectedText.text = $"- {currentMoneyCountMinus} $";
+            if(moneyCollected < 0)
+            {
+               FindAnyObjectByType<LoseLogic>().OpenUI();
+            }
         }
 
         // Обновляем порог после каждого сбора
