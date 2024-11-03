@@ -140,8 +140,7 @@ public class ItemCollector : MonoBehaviour
     // Функция для проверки и запуска анимации
     void CheckAndPlayAnimation()
     {
-        if (exit)
-        {
+
             if (moneyCollected >= threshold[CustomCount])
             {
                 if (characterAnimator != null)
@@ -152,7 +151,6 @@ public class ItemCollector : MonoBehaviour
                 progressBar.fillAmount = 0f; // Сброс шкалы
                 UpdateFillAmountThreshold(); // Обновляем порог после анимации
             }
-        }
         
         progressBar.fillAmount = (float)moneyCollected / 1000f; // Обновляем шкалу прогресса
     }
@@ -168,38 +166,15 @@ public class ItemCollector : MonoBehaviour
     public void StartMethod()
     {
         PlayerMovement.enabled = false;
-        StartCoroutine(RotateCharacterCoroutine());
-        StartCoroutine(ChangeCustomCoroutine());
     }
 
-    private IEnumerator RotateCharacterCoroutine()
+
+    public void EndMethod()
     {
-        float elapsedTime = 0f;
-        Quaternion targetRotation = Quaternion.Euler(0f, 360f, 0f) * initialRotation;
-
-        Debug.Log("Начинаем вращение персонажа");
-
-        while (elapsedTime < rotationDuration)
-        {
-            float t = elapsedTime / rotationDuration;
-            transform.rotation = Quaternion.Lerp(initialRotation, targetRotation, t);
-            elapsedTime += Time.deltaTime;
-            yield return null;
-        }
-
-        transform.rotation = targetRotation;
-        Debug.Log("Вращение завершено");
-    }
-    private IEnumerator ChangeCustomCoroutine() 
-    {
-        yield return TwoSecond;
         PlayerMovement.enabled = true;
-        //characterCollider.enabled = true;
         CustomCount++;
-        fillAmountThreshold = threshold[CustomCount];
         Player[CustomCount - 1].SetActive(false);
         Player[CustomCount].SetActive(true);
-        exit = true;
         characterAnimator.SetTrigger("Exit");
     }
 
