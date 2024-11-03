@@ -10,6 +10,7 @@ public class LoseLogic : MonoBehaviour
     [SerializeField] GameObject player;
     public Vector3 Position;
     [SerializeField] GameObject UI;
+    public int rotation;
     public void OpenUI()
     {
         UI.SetActive(true);
@@ -22,6 +23,7 @@ public class LoseLogic : MonoBehaviour
         if(Position != Vector3.zero) 
         { 
             player.transform.position = Position;
+            player.transform.rotation = Quaternion.Euler(0, rotation, 0);
             UI.SetActive(false);
         } 
         else

@@ -16,9 +16,11 @@ public class FinishZone : MonoBehaviour
         
         if (other.CompareTag("Player"))
         {
+            ui.SetActive(true);
+            Time.timeScale = 0;
             Money.text = FindAnyObjectByType<ItemCollector>().moneyCollected.ToString();
             FindAnyObjectByType<ItemCollector>().SaveData();
-            Time.timeScale = 0;
+           
         }
     }
 

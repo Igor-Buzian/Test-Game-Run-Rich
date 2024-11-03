@@ -107,6 +107,7 @@ public class ItemCollector : MonoBehaviour
             MoneyCollectedText.text = $"- {currentMoneyCountMinus} $";
             if(moneyCollected < 0)
             {
+                moneyCollected = 40;
                FindAnyObjectByType<LoseLogic>().OpenUI();
             }
         }

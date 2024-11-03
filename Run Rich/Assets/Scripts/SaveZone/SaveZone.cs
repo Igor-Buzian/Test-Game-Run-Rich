@@ -8,6 +8,7 @@ public class SaveZone : MonoBehaviour
     LoseLogic winLoseLogic;
     [SerializeField] private Animator flag1; // Ïונגûי פכאד
     [SerializeField] private Animator flag2; // Âעמנמי פכאד
+    [SerializeField] int rotation;
     private void Start()
     {
         winLoseLogic = FindAnyObjectByType<LoseLogic>();
@@ -17,6 +18,7 @@ public class SaveZone : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             winLoseLogic.Position = transform.position;
+            winLoseLogic.rotation = rotation;
             flag1.enabled = true;
             flag2.enabled = true;
         }
