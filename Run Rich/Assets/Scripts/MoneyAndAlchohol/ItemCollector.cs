@@ -231,7 +231,7 @@ public class ItemCollector : MonoBehaviour
         if (PlayerPrefs.GetInt("ProgressBarCount", 0) >= threshold.Length)
         {
             LastUpdate = true;
-            UpdateProgressCount = threshold.Length;
+            UpdateProgressCount = threshold.Length-1;
             ProgressBarCount = PlayerPrefs.GetInt("ProgressBarCount", 0)-1;
 
         }
