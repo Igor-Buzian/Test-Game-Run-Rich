@@ -1,4 +1,4 @@
-using System;
+/*using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
@@ -208,5 +208,112 @@ public class ItemCollector : MonoBehaviour
     public void LoadData()
     {
         moneyCollected = PlayerPrefs.GetInt("MoneyCollected", 0);
+    }
+}*/
+
+using System;
+using UnityEngine;
+
+public class ItemCollector : MonoBehaviour
+{
+    [SerializeField] private MoneyManager moneyManager;
+    [SerializeField] private AnimationController animationController;
+    [SerializeField] private ProgressBar progressBar;
+    private WaitForSeconds twoSecond;
+    [SerializeField] float[] threshold;
+    int ProgressBarCount;
+    int UpdateProgressCount;
+    int GetCollectedAmount;
+    bool LastUpdate;
+
+    private void Awake()
+    {
+        if (PlayerPrefs.GetInt("ProgressBarCount", 0) >= threshold.Length)
+        {
+            LastUpdate = true;
+            UpdateProgressCount = threshold.Length;
+            ProgressBarCount = PlayerPrefs.GetInt("ProgressBarCount", 0)-1;
+
+        }
+        else
+        {
+            ProgressBarCount = PlayerPrefs.GetInt("ProgressBarCount", 0);
+            if (ProgressBarCount == 0) UpdateProgressCount = 0;
+            else
+            UpdateProgressCount = ProgressBarCount - 1;
+        }
+        animationController.PlayerCustomCount(ProgressBarCount);
+        progressBar.UpdateProgress(moneyManager.FirstAmountMoney(), threshold[UpdateProgressCount]);
+        twoSecond = new WaitForSeconds(2);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Money"))
+        {
+            moneyManager.CollectMoney(2);
+            other.gameObject.SetActive(false);
+        }
+        else if (other.CompareTag("Alcohol"))
+        {
+            moneyManager.SpendMoney(20);
+            other.gameObject.SetActive(false);
+        }
+        else if (other.CompareTag("Frame"))
+        {
+            if (other.gameObject.GetComponent<FrameLogic>()?.XLogic == true)
+            {
+                moneyManager.Frame(other.gameObject.GetComponent<FrameLogic>().MoneyCount, true);
+            }
+            else if (other.gameObject.GetComponent<FrameLogic>()?.AlchoholFrame == true)
+            {
+                moneyManager.SpendMoney(other.gameObject.GetComponent<FrameLogic>().MoneyCount);
+            }
+            else
+            {
+                moneyManager.CollectMoney(other.gameObject.GetComponent<FrameLogic>().MoneyCount);
+            }
+
+        }
+        else if (other.CompareTag("Dead"))
+        {
+            FindAnyObjectByType<LoseLogic>().OpenUI();
+        }
+        if (!LastUpdate)
+        {
+            CheckAndPlayAnimation();
+        }
+       
+    }
+
+    private void CheckAndPlayAnimation()
+    {
+        GetCollectedAmount = moneyManager.GetCollectedAmount();
+        // Обновляем прогресс
+        progressBar.UpdateProgress(GetCollectedAmount, threshold[UpdateProgressCount], PlayAnimationAndReset);
+
+        // Проверка порога
+        if (GetCollectedAmount >= threshold[ProgressBarCount])
+        {
+            ProgressBarCount++;
+            PlayerPrefs.SetInt("ProgressBarCount", ProgressBarCount);
+            
+            if (ProgressBarCount >= threshold.Length - 1)
+            {
+                LastUpdate = true;
+            }
+            else
+            {
+                animationController.PlayerCustomCount(ProgressBarCount);
+                animationController.PlayAnimation("custom");
+            }
+
+        }
+        
+    }
+
+    private void PlayAnimationAndReset()
+    {
+        UpdateProgressCount++;
     }
 }

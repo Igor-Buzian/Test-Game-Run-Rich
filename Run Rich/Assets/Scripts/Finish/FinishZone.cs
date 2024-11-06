@@ -11,6 +11,13 @@ public class FinishZone : MonoBehaviour
     [SerializeField] TextMeshProUGUI Money;
     int currentMoney;
 
+    PlayerMovement PlayerMovement;
+
+    private void Start()
+    {
+        PlayerMovement = FindAnyObjectByType<PlayerMovement>();
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         
@@ -18,8 +25,8 @@ public class FinishZone : MonoBehaviour
         {
             ui.SetActive(true);
             Time.timeScale = 0;
-            Money.text = FindAnyObjectByType<ItemCollector>().moneyCollected.ToString();
-            FindAnyObjectByType<ItemCollector>().SaveData();
+            Money.text = FindAnyObjectByType<MoneyManager>().moneyCollected.ToString();
+            FindAnyObjectByType<MoneyManager>().SaveData();
            
         }
     }
