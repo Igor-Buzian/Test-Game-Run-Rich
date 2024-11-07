@@ -8,6 +8,16 @@ public class FirstPopup : MonoBehaviour
     {
         Time.timeScale = 0f;
     }
+    public void OpenPopup()
+    {
+        gameObject.SetActive(true);
+        StartCoroutine(DelayForOpenPopup());
+    }
+    IEnumerator DelayForOpenPopup()
+    {
+        yield return new WaitForSeconds(.5f);
+        Time.timeScale = 0f;
+    }
 
     public void CloseButton()
     {

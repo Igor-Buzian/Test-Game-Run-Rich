@@ -1,4 +1,4 @@
-/*using UnityEngine;
+using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -8,7 +8,17 @@ public class PlayerMovement : MonoBehaviour
 
     private Vector3 startPos;
     private Vector3 currentPos;
+       Vector3 SpawnTransform;
+    private void Start()
+    {
+        SpawnTransform = transform.position;
+    }
 
+    public void BackToFirstPosition()
+    {
+        Time.timeScale = 1f;
+        transform.position = SpawnTransform;
+    }
     void Update()
     {
         transform.Translate(Vector3.forward * speed * Time.deltaTime);
@@ -31,15 +41,25 @@ public class PlayerMovement : MonoBehaviour
             }
         }
     }
-}*/
-using UnityEngine;
+}
+/*using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
     public float speed = 5f; // Скорость движения вперед
     public float rotationSpeed = 100f; // Скорость поворота
+    Vector3 SpawnTransform;
+    private void Start()
+    {
+        SpawnTransform = transform.position;
+    }
 
-void Update()
+    public void BackToFirstPosition()
+    {
+        Time.timeScale = 1f;
+        transform.position = SpawnTransform;
+    }
+    void Update()
     {
         // Автоматическое движение вперед
         transform.Translate(Vector3.forward * speed * Time.deltaTime);
@@ -51,4 +71,4 @@ void Update()
         // Поворот
         transform.Rotate(0, rotation, 0);
     }
-}
+}*/

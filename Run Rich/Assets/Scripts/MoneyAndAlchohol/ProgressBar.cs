@@ -11,7 +11,7 @@ public class ProgressBar : MonoBehaviour
     }*/
     public void UpdateProgress(float currentAmount, float maxAmount, System.Action onComplete = null)
     {
-        if (maxAmount <= maxMassiveAmount) 
+        if (maxAmount < maxMassiveAmount) 
         {
             float fillAmount = currentAmount / maxAmount;
             progressBar.fillAmount = fillAmount;

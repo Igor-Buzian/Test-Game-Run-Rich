@@ -1,3 +1,4 @@
+using ButchersGames;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -12,10 +13,14 @@ public class FinishZone : MonoBehaviour
     int currentMoney;
 
     PlayerMovement PlayerMovement;
+    FirstPopup FirstPopup;
+    MoneyManager MoneyManager;
 
     private void Start()
     {
         PlayerMovement = FindAnyObjectByType<PlayerMovement>();
+        FirstPopup = FindAnyObjectByType<FirstPopup>();
+        MoneyManager = FindAnyObjectByType<MoneyManager>();
     }
 
     private void OnTriggerEnter(Collider other)
@@ -25,15 +30,17 @@ public class FinishZone : MonoBehaviour
         {
             ui.SetActive(true);
             Time.timeScale = 0;
-            Money.text = FindAnyObjectByType<MoneyManager>().moneyCollected.ToString();
-            FindAnyObjectByType<MoneyManager>().SaveData();
+            Money.text = MoneyManager.moneyCollected.ToString();
+            MoneyManager.SaveData();
            
         }
     }
 
     public void WinButton()
     {
-        Time.timeScale = 1;
-        SceneManager.LoadScene(0);
+        MoneyManager.LoadData();
+        PlayerMovement.BackToFirstPosition();
+        FirstPopup.OpenPopup();
+        LevelManager.Default.NextLevel();
     }
 }

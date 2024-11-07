@@ -301,6 +301,8 @@ public class ItemCollector : MonoBehaviour
             if (ProgressBarCount >= threshold.Length - 1)
             {
                 LastUpdate = true;
+                animationController.PlayerCustomCount(threshold.Length - 1);
+                animationController.PlayAnimation("custom");
             }
             else
             {

@@ -18,9 +18,7 @@ public class MoneyManager : MonoBehaviour
 
     private void Start()
     {
-        LoadData();
         FullMoneyInfo = GetComponent<TextMeshProUGUI>();
-        FullMoneyInfo.text = $"{FullMoney}";
         TwoSecond = new WaitForSeconds(2);
     }
 
@@ -123,6 +121,7 @@ public class MoneyManager : MonoBehaviour
     public void SaveData()
     {
         FullMoney += moneyCollected;
+        moneyCollected = 0;
         PlayerPrefs.SetInt("FullMoney", FullMoney);
         PlayerPrefs.Save();
         Debug.Log("Данные сохранены!");
@@ -135,6 +134,7 @@ public class MoneyManager : MonoBehaviour
             moneyCollected = 0;
         }
         FullMoney = PlayerPrefs.GetInt("FullMoney", 40);
+        FullMoneyInfo.text = $"{FullMoney}";
     }
 
     public int FirstAmountMoney()

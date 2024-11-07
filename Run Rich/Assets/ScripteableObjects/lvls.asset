@@ -9,9 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 96d3a94c5b7b67749aa43441c59c05e4, type: 3}
+  m_Script: {fileID: 11500000, guid: 54aeab1ae0e637446a21653b4c9655e6, type: 3}
   m_Name: lvls
   m_EditorClassIdentifier: 
   randomizedLvls: 0
   lvls:
-  - {fileID: 7345637302569346647, guid: b41aec9b6b695804f8823d213106854a, type: 3}
+  - {fileID: 6106460464929813704, guid: 01870ec290719914687ba8afa957454d, type: 3}
+  - {fileID: 6106460464929813704, guid: ebce98ad21862ef4788af2e416663a64, type: 3}
+  - {fileID: 6106460464929813704, guid: 1df1fb6861a7b12458195ed04d76c062, type: 3}
+  - {fileID: 6106460464929813704, guid: 310b5e9f26e0cc94a9d86b8344ae2c7c, type: 3}

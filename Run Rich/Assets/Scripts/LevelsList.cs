@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace ButchersGames
 {
-    [CreateAssetMenu(menuName = "Data/Lvls List")]
+    [CreateAssetMenu(menuName = "List/Lvls List")]
     public class LevelsList : ScriptableObject
     {
         public bool randomizedLvls;
